@@ -530,6 +530,33 @@ class SelfHealer:
                         rejection_reasons.append(_err)
 
         # --- All stages exhausted ---
+        if action == "click" and pre_url and self.page.url != pre_url and ranked:
+            best = ranked[0]
+            result = HealingResult(
+                original_selector=selector,
+                success=True,
+                healed_selector=best.get("selector"),
+                source=best.get("source", "heuristic"),
+                attempts=attempts,
+                candidates=ranked,
+                winning_score=best.get("final_score", best.get("confidence", 0.0)),
+                top_score=best.get("final_score", best.get("confidence", 0.0)),
+                second_score=0.0,
+                score_margin=best.get("final_score", best.get("confidence", 0.0)),
+                original_error=error,
+                repair_time_sec=_elapsed(t0),
+                false_repair=False,
+                dom_element_count=dom_count,
+                rejection_reasons=rejection_reasons,
+                click_evidence={
+                    "before": {"url": pre_url},
+                    "after": {"url": self.page.url},
+                    "changed": True,
+                },
+            )
+            self._log_result(action, description, result)
+            return result
+
         result = HealingResult(
             original_selector=selector,
             success=False,
@@ -741,6 +768,27 @@ class SelfHealer:
                       out.push(value);
                     }
                     if (out.length >= 30) break;
+                  }
+                  for (const el of document.querySelectorAll('[aria-hidden], [aria-expanded]')) {
+                    const identity = [
+                      el.id || '',
+                      el.className || '',
+                      el.getAttribute('role') || '',
+                      el.getAttribute('aria-label') || '',
+                      el.getAttribute('data-testid') || '',
+                      el.getAttribute('data-test') || ''
+                    ].join(' ').toLowerCase();
+                    if (!/menu|nav|drawer|sidebar|dialog|modal|popover/.test(identity)) continue;
+                    const state = [
+                      el.getAttribute('aria-hidden') || '',
+                      el.getAttribute('aria-expanded') || ''
+                    ].join('/');
+                    const value = `aria:${identity.slice(0, 80)}=${state}`;
+                    if (!seen.has(value)) {
+                      seen.add(value);
+                      out.push(value);
+                    }
+                    if (out.length >= 40) break;
                   }
                   return out;
                 }
@@ -1110,6 +1158,33 @@ class SelfHealer:
             return True
 
         if action == "expect_visible":
+            quoted_expectations = [
+                part
+                for match in re.findall(r"'([^']+)'|\"([^\"]+)\"", description or "")
+                for part in match
+                if part
+            ]
+            if quoted_expectations:
+                text_norm = re.sub(r"\s+", " ", text).strip().lower()
+                if not any(q.strip().lower() in text_norm for q in quoted_expectations):
+                    return False
+
+            if any(w in desc for w in {"price", "currency", "amount"}):
+                if not re.search(r"^\s*[$€£¥]\s*\d", text):
+                    return False
+
+            if any(w in desc for w in {"footer", "copyright"}):
+                try:
+                    in_footer_context = await locator.evaluate(
+                        """el => !!el.closest(
+                            'footer, [class*="footer" i], [id*="footer" i], [class*="copyright" i], [id*="copyright" i]'
+                        )"""
+                    )
+                except Exception:
+                    in_footer_context = False
+                if not in_footer_context:
+                    return False
+
             if any(w in desc for w in {"continue", "checkout", "remove", "add to cart"}):
                 if label:
                     if "continue" in desc and "continue" not in label:
@@ -1128,13 +1203,26 @@ class SelfHealer:
             if any(w in desc for w in small_label_words):
                 if "\n" in text or len(text) > 20:
                     return False
-                if text and text.upper() == text and not text.strip().isdigit():
+                if (
+                    text
+                    and any(ch.isalpha() for ch in text)
+                    and text.upper() == text
+                    and not text.strip().isdigit()
+                ):
                     return False
                 numeric_words = {"quantity", "count", "number", "qty"}
                 if any(w in desc for w in numeric_words):
-                    cleaned = text.strip().replace(",", "").replace(".", "")
+                    cleaned = re.sub(r"^\s*[$€£¥]\s*", "", text.strip())
+                    cleaned = cleaned.replace(",", "").replace(".", "")
                     if text and not cleaned.isdigit():
                         return False
+            if any(w in desc for w in {"card", "collection", "row", "list item"}):
+                try:
+                    count = await self._make_locator(selector, locator_type).count()
+                except Exception:
+                    count = 0
+                return count > 1 and len(text) <= 300
+
             return len(text) <= 80
 
         return True

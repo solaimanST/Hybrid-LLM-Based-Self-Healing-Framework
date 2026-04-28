@@ -193,6 +193,7 @@ class HeuristicEngine:
             validated.sort(
                 key=lambda c: (
                     c.final_score,
+                    self._mutation_suffix_boost(c),
                     c.specificity_bonus,
                     c.uniqueness,
                     c.validation.get("visible", False),
@@ -621,6 +622,9 @@ class HeuristicEngine:
         base_score += cand.specificity_bonus
         base_score += self._action_specific_boost(ref, cand)
         base_score += self._semantic_description_boost(ref, cand)
+        base_score += self._visible_collection_boost(ref, cand)
+        base_score += self._currency_text_boost(ref, cand)
+        base_score += self._mutation_suffix_boost(cand)
         base_score += 0.06 * cand.partial_class_sim
         base_score += 0.03 * cand.proximity
         base_score -= self._wrong_click_penalty(ref, cand)
@@ -631,6 +635,84 @@ class HeuristicEngine:
         base_score *= self._tag_action_multiplier(ref.action, cand)
 
         return max(0.0, min(0.98, base_score))
+
+    def _visible_collection_boost(self, ref: ReferenceElement, cand: Candidate) -> float:
+        """
+        Boost repeated visible elements only when the description explicitly
+        asks for a collection/list/card set. This keeps single controls from
+        winning collection repair while still allowing repeated item cards.
+        """
+        if ref.action not in {"expect_visible", "wait_for_visible"}:
+            return 0.0
+
+        desc = self._normalize_space(ref.description).lower()
+        if not any(w in desc for w in {"collection", "repeated", "cards", "list item", "rows"}):
+            return 0.0
+
+        match_count = int((cand.validation or {}).get("match_count") or 0)
+        if match_count < 2:
+            return 0.0
+
+        expected_count = self._expected_collection_count(desc)
+        if expected_count is not None:
+            if match_count == expected_count:
+                return 0.30
+            return -0.20
+
+        tag = (cand.tag or "").lower()
+        if tag not in {"div", "li", "article", "section", "tr"}:
+            return 0.0
+
+        selector = (cand.selector or "").lower()
+        if selector in {"div", "li", "article", "section", "tr"}:
+            return 0.0
+        if match_count > 20:
+            return 0.0
+
+        return 0.22
+
+    def _expected_collection_count(self, description: str) -> Optional[int]:
+        """Extract small explicit collection counts from natural language."""
+        m = re.search(r"\b(?:exactly|count|total|expect(?:ed)?)\s+(\d{1,3})\b", description)
+        if m:
+            return int(m.group(1))
+
+        words = {
+            "one": 1, "two": 2, "three": 3, "four": 4, "five": 5,
+            "six": 6, "seven": 7, "eight": 8, "nine": 9, "ten": 10,
+        }
+        m = re.search(
+            r"\b(?:exactly|count|total|expect(?:ed)?)\s+("
+            + "|".join(words)
+            + r")\b",
+            description,
+        )
+        if m:
+            return words[m.group(1)]
+        return None
+
+    def _currency_text_boost(self, ref: ReferenceElement, cand: Candidate) -> float:
+        """Boost visible price/currency labels that expose currency-looking text."""
+        if ref.action not in {"expect_visible", "wait_for_visible"}:
+            return 0.0
+
+        desc = self._normalize_space(ref.description).lower()
+        if not any(w in desc for w in {"price", "currency", "amount"}):
+            return 0.0
+
+        text = self._normalize_space(
+            (cand.attrs or {}).get("text") or cand.text or ""
+        )
+        if re.match(r"^\s*[$€£¥]\s*\d", text):
+            return 0.24
+        return 0.0
+
+    def _mutation_suffix_boost(self, cand: Candidate) -> float:
+        """Small boost for direct removal of known synthetic mutation suffixes."""
+        reason = (cand.reason or "").lower()
+        if "removed mutation suffix" in reason:
+            return 0.18
+        return 0.0
 
     def _tag_action_multiplier(self, action: str, cand: Candidate) -> float:
         """
@@ -1135,7 +1217,15 @@ class HeuristicEngine:
             elif action in {"expect_visible", "wait_for_visible"}:
                 if not visible:
                     return {"valid": False, "reason": "not visible", "match_count": count}
-                if len(text) > 60:
+                desc = self._normalize_space(ref.description if ref is not None else "").lower()
+                allows_content_container = any(
+                    word in desc
+                    for word in {
+                        "card", "collection", "row", "list item", "item card",
+                        "container", "panel", "footer", "copyright",
+                    }
+                )
+                if len(text) > 60 and not allows_content_container:
                     return {"valid": False, "reason": "container_large_text", "match_count": count}
 
             return {

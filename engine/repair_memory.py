@@ -148,9 +148,13 @@ class RepairMemory:
         """
         Return memory-sourced candidates for *failed_selector*.
 
-        Strategy (in order):
-          1. Exact match on ``failed_selector`` (highest priority).
-          2. Records with the same action (if *action* is provided).
+        Strategy:
+          1. Exact match on ``failed_selector`` only.
+
+        Precision-first note: same-action recall is intentionally not used.
+        A previous ``expect_visible`` or ``click`` repair can target a completely
+        different element, so treating it as a candidate for a new selector risks
+        false repair.
 
         Each returned candidate has ``source="memory"`` and
         ``confidence=0.95``.
@@ -190,18 +194,9 @@ class RepairMemory:
                     "reason":       f"previous successful repair, hit_count={hit_count}",
                 })
 
-        # 1. Exact failed_selector match
         for r in records:
             if r.get("failed_selector") == failed_selector:
                 _add(r)
-
-        # 2. Same-action matches (if action provided and not already at cap)
-        if action and len(candidates) < max_candidates:
-            for r in records:
-                if r.get("action") == action and r.get("failed_selector") != failed_selector:
-                    _add(r)
-                    if len(candidates) >= max_candidates:
-                        break
 
         return candidates[:max_candidates]
 

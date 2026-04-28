@@ -3,6 +3,7 @@ tests/selene_converted/test_visibility_healing.py
 
 Converted from Selene: visibility, existence, and state checks.
 Tests T13–T20 (4 normal / 4 broken pairs).
+This is an extended dataset, separate from the official controlled baseline.
 
 Covers: logo visibility, error message, cart badge, graceful failure
         under healing_mode='none', attribute_removed, text_changed.
@@ -57,6 +58,9 @@ async def test_T13_logo_visible_broken(
     )
     assert result.healed_selector is not None
     assert result.source in {"heuristic", "llm", "memory"}
+    healed = page_at_inventory.locator(result.healed_selector).first
+    await expect(healed).to_be_visible()
+    await expect(healed).to_contain_text("Swag")
 
 
 # ---------------------------------------------------------------------------
@@ -82,7 +86,7 @@ async def test_T14_error_message_broken(
     """
     Break type    : attribute_removed  (data-test attr renamed/removed)
     Original      : [data-test='error']
-    Broken        : [data-test='login-error-message-REMOVED']
+    Broken        : [data-test='error-REMOVED']
     Expected heal : [data-test='error'] or .error-message-container or h3
     Research note : data-test attributes are sometimes removed in production
                     builds. Tests recovery via class, role, or text heuristics.
@@ -92,8 +96,11 @@ async def test_T14_error_message_broken(
     await page_at_login.click("#login-button")
 
     result = await healer_hybrid.expect_visible(
-        "[data-test='login-error-message-REMOVED']",
-        description="Login error message container after failed authentication",
+        "[data-test='error-REMOVED']",
+        description=(
+            "Login error message container after failed authentication showing "
+            "'Username and password do not match'"
+        ),
     )
     assert result.success, (
         f"Error msg healing failed — source={result.source}, "
@@ -101,6 +108,9 @@ async def test_T14_error_message_broken(
     )
     assert result.healed_selector is not None
     assert result.source in {"heuristic", "llm", "memory"}
+    healed = page_at_login.locator(result.healed_selector).first
+    await expect(healed).to_be_visible()
+    await expect(healed).to_contain_text("Username and password do not match")
 
 
 # ---------------------------------------------------------------------------
@@ -139,6 +149,9 @@ async def test_T15_cart_badge_broken(
         f"error={result.original_error}"
     )
     assert result.healed_selector is not None
+    healed = page_at_inventory.locator(result.healed_selector).first
+    await expect(healed).to_be_visible()
+    await expect(healed).to_have_text("1")
 
 
 # ---------------------------------------------------------------------------
@@ -178,6 +191,9 @@ async def test_T16_sort_dropdown_broken(
     )
     assert result.healed_selector is not None
     assert result.source in {"heuristic", "llm", "memory"}
+    healed = page_at_inventory.locator(result.healed_selector).first
+    await expect(healed).to_be_visible()
+    await expect(healed).to_have_count(1)
 
 
 # ---------------------------------------------------------------------------
@@ -245,6 +261,9 @@ async def test_T18_page_title_broken(
     )
     assert result.healed_selector is not None
     assert result.source in {"heuristic", "llm", "memory"}
+    healed = page_at_inventory.locator(result.healed_selector).first
+    await expect(healed).to_be_visible()
+    await expect(healed).to_have_text("Products")
 
 
 # ---------------------------------------------------------------------------
@@ -274,7 +293,10 @@ async def test_T19_item_price_broken(
     """
     result = await healer_hybrid.expect_visible(
         ".item-price-label-BROKEN",
-        description="Product price label inside inventory item card",
+        description=(
+            "Product price currency amount inside an inventory item card; "
+            "visible text starts with a dollar sign"
+        ),
     )
     assert result.success, (
         f"Price label healing failed — source={result.source}, "
@@ -282,6 +304,9 @@ async def test_T19_item_price_broken(
     )
     assert result.healed_selector is not None
     assert result.source in {"heuristic", "llm", "memory"}
+    healed = page_at_inventory.locator(result.healed_selector).first
+    await expect(healed).to_be_visible()
+    assert (await healed.inner_text()).strip().startswith("$")
 
 
 # ---------------------------------------------------------------------------
@@ -311,7 +336,10 @@ async def test_T20_footer_broken(
     """
     result = await healer_hybrid.expect_visible(
         ".footer > .footer-inner > .copyright-MOVED",
-        description="Footer copyright text at the bottom of inventory page",
+        description=(
+            "Footer copyright text inside the page footer at the bottom of "
+            "the inventory page"
+        ),
     )
     assert result.success, (
         f"Footer position healing failed — source={result.source}, "
@@ -319,3 +347,6 @@ async def test_T20_footer_broken(
     )
     assert result.healed_selector is not None
     assert result.source in {"heuristic", "llm", "memory"}
+    healed = page_at_inventory.locator(result.healed_selector).first
+    await expect(healed).to_be_visible()
+    await expect(healed).to_contain_text("Sauce Labs")

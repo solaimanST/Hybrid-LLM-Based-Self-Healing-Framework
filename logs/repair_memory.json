@@ -1,0 +1,290 @@
+[
+  {
+    "failed_selector": "#input-firstname-BROKEN",
+    "healed_selector": "#input-firstname",
+    "locator_type": "css",
+    "action": "fill",
+    "url": "",
+    "timestamp": "2026-04-28T13:26:30.892002+00:00",
+    "hit_count": 2
+  },
+  {
+    "failed_selector": "input[name='agree-BROKEN']",
+    "healed_selector": "input[name=\"agree\"]",
+    "locator_type": "css",
+    "action": "click",
+    "url": "",
+    "timestamp": "2026-04-28T13:26:33.212971+00:00",
+    "hit_count": 2
+  },
+  {
+    "failed_selector": ".btn-primary-BROKEN",
+    "healed_selector": ".btn-primary",
+    "locator_type": "css",
+    "action": "click",
+    "url": "",
+    "timestamp": "2026-04-28T13:26:36.198257+00:00",
+    "hit_count": 2
+  },
+  {
+    "failed_selector": ".inventory_item > .item-button-container > .add-to-cart-btn-NESTED",
+    "healed_selector": "[data-test='add-to-cart-sauce-labs-backpack']",
+    "locator_type": "test_id",
+    "action": "click",
+    "url": "https://www.saucedemo.com/inventory.html",
+    "timestamp": "2026-04-28T13:26:52.891246+00:00",
+    "hit_count": 1
+  },
+  {
+    "failed_selector": "[data-test='add-to-cart-ATTRIBUTE-REMOVED']",
+    "healed_selector": "#add-to-cart-sauce-labs-backpack",
+    "locator_type": "css",
+    "action": "click",
+    "url": "",
+    "timestamp": "2026-04-28T13:26:59.078906+00:00",
+    "hit_count": 1
+  },
+  {
+    "failed_selector": ".top-bar > .cart-container > .badge-MOVED",
+    "healed_selector": "#shopping_cart_container",
+    "locator_type": "css",
+    "action": "expect_visible",
+    "url": "",
+    "timestamp": "2026-04-28T13:27:06.496693+00:00",
+    "hit_count": 1
+  },
+  {
+    "failed_selector": ".shopping_cart_container-SIBLING .shopping_cart_link_NEW",
+    "healed_selector": "a[class*=\"shopping\"]",
+    "locator_type": "css",
+    "action": "click",
+    "url": "",
+    "timestamp": "2026-04-28T13:27:15.441595+00:00",
+    "hit_count": 1
+  },
+  {
+    "failed_selector": ".cart-item-title-RENAMED",
+    "healed_selector": "div[class*=\"cart\"]",
+    "locator_type": "css",
+    "action": "expect_visible",
+    "url": "https://www.saucedemo.com/cart.html",
+    "timestamp": "2026-04-28T13:27:37.406079+00:00",
+    "hit_count": 2
+  },
+  {
+    "failed_selector": ".cart_item > .cart-quantity-wrapper > .qty-label-NESTED",
+    "healed_selector": "div[class*=\"cart\"]",
+    "locator_type": "css",
+    "action": "expect_visible",
+    "url": "https://www.saucedemo.com/cart.html",
+    "timestamp": "2026-04-28T13:27:52.084709+00:00",
+    "hit_count": 2
+  },
+  {
+    "failed_selector": ".cart-footer > .action-group > .checkout-btn-MOVED",
+    "healed_selector": "#checkout",
+    "locator_type": "css",
+    "action": "click",
+    "url": "",
+    "timestamp": "2026-04-28T13:27:59.424563+00:00",
+    "hit_count": 1
+  },
+  {
+    "failed_selector": "#firstName-RENAMED",
+    "healed_selector": "#first-name",
+    "locator_type": "css",
+    "action": "fill",
+    "url": "",
+    "timestamp": "2026-04-28T13:28:05.754558+00:00",
+    "hit_count": 1
+  },
+  {
+    "failed_selector": "input[data-test='lastName-REMOVED']",
+    "healed_selector": "#last-name",
+    "locator_type": "css",
+    "action": "fill",
+    "url": "",
+    "timestamp": "2026-04-28T13:28:12.313426+00:00",
+    "hit_count": 1
+  },
+  {
+    "failed_selector": "#postal-code-SIBLING-ADDED",
+    "healed_selector": "#postal-code",
+    "locator_type": "css",
+    "action": "fill",
+    "url": "",
+    "timestamp": "2026-04-28T13:28:20.204806+00:00",
+    "hit_count": 1
+  },
+  {
+    "failed_selector": ".checkout-buttons > .continue-group > #continue-MOVED",
+    "healed_selector": "#continue",
+    "locator_type": "css",
+    "action": "click",
+    "url": "",
+    "timestamp": "2026-04-28T13:28:26.776569+00:00",
+    "hit_count": 1
+  },
+  {
+    "failed_selector": "button[data-test='continue-shopping-REMOVED']",
+    "healed_selector": "#continue-shopping",
+    "locator_type": "css",
+    "action": "expect_visible",
+    "url": "",
+    "timestamp": "2026-04-28T13:28:35.887551+00:00",
+    "hit_count": 1
+  },
+  {
+    "failed_selector": ".cart-footer > .navigation-group > .continue-shopping-btn-NESTED",
+    "healed_selector": "#continue-shopping",
+    "locator_type": "css",
+    "action": "click",
+    "url": "",
+    "timestamp": "2026-04-28T13:28:43.496709+00:00",
+    "hit_count": 1
+  },
+  {
+    "failed_selector": "#item_4_title_link-BROKEN",
+    "healed_selector": "a:has-text(\"Sauce Labs Backpack\")",
+    "locator_type": "css",
+    "action": "click",
+    "url": "",
+    "timestamp": "2026-04-28T13:28:49.242240+00:00",
+    "hit_count": 1
+  },
+  {
+    "failed_selector": "#back-to-products-BROKEN",
+    "healed_selector": "button[name=\"back-to-products\"]",
+    "locator_type": "css",
+    "action": "click",
+    "url": "",
+    "timestamp": "2026-04-28T13:30:04.313039+00:00",
+    "hit_count": 2
+  },
+  {
+    "failed_selector": "#react-burger-menu-btn-EXTRA",
+    "healed_selector": "button:has-text(\"Open Menu\")",
+    "locator_type": "css",
+    "action": "click",
+    "url": "",
+    "timestamp": "2026-04-28T13:29:01.415157+00:00",
+    "hit_count": 1
+  },
+  {
+    "failed_selector": "#react-burger-cross-btn-BROKEN",
+    "healed_selector": "button:has-text(\"Close Menu\")",
+    "locator_type": "css",
+    "action": "click",
+    "url": "",
+    "timestamp": "2026-04-28T13:29:07.897578+00:00",
+    "hit_count": 1
+  },
+  {
+    "failed_selector": "#logout_sidebar_link-BROKEN",
+    "healed_selector": "#logout_sidebar_link",
+    "locator_type": "css",
+    "action": "click",
+    "url": "",
+    "timestamp": "2026-04-28T13:29:15.763466+00:00",
+    "hit_count": 1
+  },
+  {
+    "failed_selector": "#reset_sidebar_link-BROKEN",
+    "healed_selector": "#reset_sidebar_link",
+    "locator_type": "css",
+    "action": "click",
+    "url": "",
+    "timestamp": "2026-04-28T13:29:31.880961+00:00",
+    "hit_count": 1
+  },
+  {
+    "failed_selector": "#continue-MOVED",
+    "healed_selector": "#continue",
+    "locator_type": "css",
+    "action": "click",
+    "url": "",
+    "timestamp": "2026-04-28T13:29:40.638099+00:00",
+    "hit_count": 1
+  },
+  {
+    "failed_selector": "#finish-BROKEN",
+    "healed_selector": "#finish",
+    "locator_type": "css",
+    "action": "click",
+    "url": "",
+    "timestamp": "2026-04-28T13:29:48.312830+00:00",
+    "hit_count": 1
+  },
+  {
+    "failed_selector": "#cancel-BROKEN",
+    "healed_selector": "#cancel",
+    "locator_type": "css",
+    "action": "click",
+    "url": "",
+    "timestamp": "2026-04-28T13:30:18.478457+00:00",
+    "hit_count": 1
+  },
+  {
+    "failed_selector": ".btn-remove-RENAMED",
+    "healed_selector": "#remove-sauce-labs-backpack",
+    "locator_type": "css",
+    "action": "click",
+    "url": "",
+    "timestamp": "2026-04-28T13:30:34.636581+00:00",
+    "hit_count": 1
+  },
+  {
+    "failed_selector": "button[data-test='remove-ATTR-REMOVED']",
+    "healed_selector": "#remove-sauce-labs-backpack",
+    "locator_type": "css",
+    "action": "click",
+    "url": "",
+    "timestamp": "2026-04-28T13:30:44.320873+00:00",
+    "hit_count": 1
+  },
+  {
+    "failed_selector": ".cart_item_label > .item-actions-SIBLING > .remove-btn-EXTRA",
+    "healed_selector": "#remove-sauce-labs-backpack",
+    "locator_type": "css",
+    "action": "click",
+    "url": "",
+    "timestamp": "2026-04-28T13:30:55.511440+00:00",
+    "hit_count": 1
+  },
+  {
+    "failed_selector": "select.sort-select-RENAMED",
+    "healed_selector": "select[class*=\"sort\"]",
+    "locator_type": "css",
+    "action": "select",
+    "url": "",
+    "timestamp": "2026-04-28T13:31:01.554190+00:00",
+    "hit_count": 1
+  },
+  {
+    "failed_selector": "select[data-test='sort-ATTR-REMOVED']",
+    "healed_selector": "select.product_sort_container",
+    "locator_type": "css",
+    "action": "select",
+    "url": "https://www.saucedemo.com/inventory.html",
+    "timestamp": "2026-04-28T13:31:12.308530+00:00",
+    "hit_count": 1
+  },
+  {
+    "failed_selector": ".subheader-inner > .sort-wrapper-EXTRA > select.sort-dropdown-SIBLING",
+    "healed_selector": "select[class*=\"sort\"]",
+    "locator_type": "css",
+    "action": "select",
+    "url": "",
+    "timestamp": "2026-04-28T13:31:16.636805+00:00",
+    "hit_count": 1
+  },
+  {
+    "failed_selector": ".header-secondary-container > .sort-container-MOVED > select",
+    "healed_selector": "select[class*=\"sort\"]",
+    "locator_type": "css",
+    "action": "select",
+    "url": "",
+    "timestamp": "2026-04-28T13:31:23.852603+00:00",
+    "hit_count": 1
+  }
+]

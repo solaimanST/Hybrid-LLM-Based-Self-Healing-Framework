@@ -4,6 +4,7 @@ tests/selene_converted/test_element_finding_healing.py
 Converted from Selene: element finding patterns.
 Each "broken" test simulates a real-world DOM change and evaluates
 whether the self-healing engine can recover without manual fallbacks.
+This is an extended dataset, separate from the official controlled baseline.
 
 Tests T01–T06 (3 normal / 3 broken pairs).
 
@@ -56,6 +57,7 @@ async def test_T01_find_by_id_broken(
     )
     assert result.healed_selector is not None
     assert result.source in {"heuristic", "llm", "memory"}
+    assert await page_at_login.locator("#user-name").input_value() == USERNAME
 
 
 # ---------------------------------------------------------------------------
@@ -93,6 +95,7 @@ async def test_T02_find_by_placeholder_broken(
     )
     assert result.healed_selector is not None
     assert result.source in {"heuristic", "llm", "memory"}
+    assert await page_at_login.locator("#user-name").input_value() == USERNAME
 
 
 # ---------------------------------------------------------------------------
@@ -131,3 +134,7 @@ async def test_T03_find_by_class_broken(
     )
     assert result.healed_selector is not None
     assert result.source in {"heuristic", "llm", "memory"}
+
+    error = page_at_login.locator("[data-test='error']")
+    await expect(error).to_be_visible()
+    await expect(error).to_contain_text("Username is required")

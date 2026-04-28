@@ -3,6 +3,7 @@ tests/selene_converted/test_form_healing.py
 
 Converted from Selene: form interaction patterns.
 Tests T04–T11 (4 normal / 4 broken pairs).
+This is an extended dataset, separate from the official controlled baseline.
 
 Covers: name attribute, type attribute, class rename, full login flow healing.
 
@@ -54,6 +55,7 @@ async def test_T04_login_flow_broken_username_id(
         f"Username healing failed — source={result.source}, "
         f"error={result.original_error}"
     )
+    assert await page_at_login.locator("#user-name").input_value() == USERNAME
 
     # Complete login using stable selectors to confirm the healed fill worked
     await page_at_login.fill("#password", PASSWORD)
@@ -97,6 +99,7 @@ async def test_T05_password_by_name_broken(
     )
     assert result.healed_selector is not None
     assert result.source in {"heuristic", "llm", "memory"}
+    assert await page_at_login.locator("#password").input_value() == PASSWORD
 
 
 # ---------------------------------------------------------------------------
@@ -134,6 +137,10 @@ async def test_T06_button_by_type_broken(
     )
     assert result.healed_selector is not None
     assert result.source in {"heuristic", "llm", "memory"}
+
+    error = page_at_login.locator("[data-test='error']")
+    await expect(error).to_be_visible()
+    await expect(error).to_contain_text("Username is required")
 
 
 # ---------------------------------------------------------------------------
@@ -178,3 +185,4 @@ async def test_T07_button_converted_broken(
     )
     assert result.healed_selector is not None
     assert result.source in {"heuristic", "llm", "memory"}
+    await expect(page_at_login).to_have_url(f"{BASE_URL}/inventory.html")

@@ -3,6 +3,7 @@ tests/selene_converted/test_collections_healing.py
 
 Converted from Selene: collection / multi-element patterns.
 Tests T08–T13 (3 normal / 3 broken pairs).
+This is an extended dataset, separate from the official controlled baseline.
 
 Covers: item count, list class rename, nested structure change,
         sibling insertion, add-to-cart button, product name text.
@@ -37,15 +38,18 @@ async def test_T08_inventory_count_broken(
     """
     Break type    : class_changed
     Original      : .inventory_item
-    Broken        : .product-card-BROKEN
+    Broken        : .inventory_item-BROKEN
     Expected heal : .inventory_item or div[data-test*='inventory']
     Research note : CSS class renames during design-system migrations.
                     Heuristic-only mode tested here (no LLM cost).
                     Validates that heuristics recover collection selectors.
     """
     result = await healer_heuristic.expect_visible(
-        ".product-card-BROKEN",
-        description="First product card on inventory page",
+        ".inventory_item-BROKEN",
+        description=(
+            "Inventory item product card collection; exactly six repeated "
+            "product cards on the inventory page"
+        ),
     )
     assert result.success, (
         f"Collection class healing failed — source={result.source}, "
@@ -53,6 +57,11 @@ async def test_T08_inventory_count_broken(
     )
     assert result.healed_selector is not None
     assert result.source in {"heuristic", "memory"}
+    await expect(page_at_inventory.locator(result.healed_selector).first).to_be_visible()
+    await expect(page_at_inventory.locator(result.healed_selector)).to_have_count(6)
+    first_card = page_at_inventory.locator(result.healed_selector).first
+    await expect(first_card.locator(".inventory_item_price")).to_be_visible()
+    await expect(first_card.locator("button").first).to_contain_text("Add to cart")
 
 
 # ---------------------------------------------------------------------------
@@ -75,21 +84,30 @@ async def test_T09_product_name_broken(
     """
     Break type    : class_changed  (item name class renamed)
     Original      : .inventory_item_name
-    Broken        : .product-title-BROKEN
+    Broken        : .inventory_item_name-BROKEN
     Expected heal : .inventory_item_name or a[data-test*='item-name']
     Research note : Name/title class changes are frequent in UI redesigns.
                     Tests recovery of text-content elements using parent
                     container context heuristics.
     """
     result = await healer_hybrid.expect_visible(
-        ".product-title-BROKEN",
-        description="Product name label inside inventory item card",
+        ".inventory_item_name-BROKEN",
+        description=(
+            "Product name link label inside an inventory item product card"
+        ),
     )
     assert result.success, (
         f"Product name healing failed — source={result.source}, "
         f"error={result.original_error}"
     )
     assert result.healed_selector is not None
+    healed = page_at_inventory.locator(result.healed_selector).first
+    await expect(healed).to_be_visible()
+    text = (await healed.inner_text()).strip()
+    assert text
+    assert text != "Products"
+    assert not text.startswith("$")
+    assert await healed.evaluate("el => !!el.closest('.inventory_item')")
 
 
 # ---------------------------------------------------------------------------
@@ -128,6 +146,7 @@ async def test_T10_add_to_cart_broken(
         f"error={result.original_error}"
     )
     assert result.healed_selector is not None
+    await expect(page_at_inventory).to_have_url(f"{BASE_URL}/inventory.html")
     assert result.source in {"heuristic", "llm", "memory"}
 
     # Confirm cart badge incremented to prove the click actually landed
@@ -141,12 +160,15 @@ async def test_T10_add_to_cart_broken(
 
 @pytest.mark.asyncio
 async def test_T11_nav_menu_normal(page_at_inventory: Page) -> None:
-    """Normal: open hamburger menu via .bm-burger-button."""
-    burger = page_at_inventory.locator(".bm-burger-button")
+    """Normal: open hamburger menu via the accessible menu button."""
+    burger = page_at_inventory.locator("#react-burger-menu-btn")
     await expect(burger).to_be_visible()
     await burger.click()
     menu = page_at_inventory.locator(".bm-menu")
     await expect(menu).to_be_visible()
+    await expect(page_at_inventory.locator(".bm-menu-wrap")).to_have_attribute(
+        "aria-hidden", "false"
+    )
 
 
 @pytest.mark.asyncio
@@ -155,15 +177,17 @@ async def test_T11_nav_menu_broken(
 ) -> None:
     """
     Break type    : nearby_sibling_added
-    Original      : .bm-burger-button
-    Broken        : .bm-burger-button-EXTRA  (sibling element inserted before it)
+    Original      : #react-burger-menu-btn
+    Broken        : #react-burger-menu-btn-EXTRA  (sibling element inserted before it)
     Expected heal : .bm-burger-button or button[aria-label*='menu']
     Research note : New toolbar buttons inserted as siblings shift positional
                     selectors. Tests nth-child / aria-label heuristics.
     """
     result = await healer_hybrid.click(
-        ".bm-burger-button-EXTRA",
-        description="Hamburger navigation menu button",
+        "#react-burger-menu-btn-EXTRA",
+        description=(
+            "Hamburger menu button that opens the navigation menu"
+        ),
     )
     assert result.success, (
         f"Sibling-added healing failed — source={result.source}, "
@@ -173,6 +197,9 @@ async def test_T11_nav_menu_broken(
 
     menu = page_at_inventory.locator(".bm-menu")
     await expect(menu).to_be_visible()
+    await expect(page_at_inventory.locator(".bm-menu-wrap")).to_have_attribute(
+        "aria-hidden", "false"
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -198,12 +225,16 @@ async def test_T12_cart_link_broken(
     Research note : Header restructuring moves cart into a wrapper div.
                     Tests href-attribute and class heuristic fallbacks.
     """
-    result = await healer_hybrid.expect_visible(
+    result = await healer_hybrid.click(
         ".header-actions > .cart-wrapper > .shopping_cart_link_MOVED",
-        description="Shopping cart link in the page header",
+        description=(
+            "Shopping cart anchor link in the page header that navigates to "
+            "the cart page"
+        ),
     )
     assert result.success, (
         f"DOM position healing failed — source={result.source}, "
         f"error={result.original_error}"
     )
     assert result.healed_selector is not None
+    await expect(page_at_inventory).to_have_url(f"{BASE_URL}/cart.html")
