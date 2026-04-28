@@ -1,0 +1,360 @@
+[
+  {
+    "id": "tc_001",
+    "name": "SauceDemo login - correct selectors",
+    "app": "saucedemo",
+    "url": "https://www.saucedemo.com",
+    "broken_type": "none",
+    "steps": [
+      {
+        "action": "fill",
+        "selector": "#user-name",
+        "value": "standard_user",
+        "description": "Username field"
+      },
+      {
+        "action": "fill",
+        "selector": "#password",
+        "value": "secret_sauce",
+        "description": "Password field"
+      },
+      {
+        "action": "click",
+        "selector": "#login-button",
+        "description": "Login button"
+      },
+      {
+        "action": "expect_visible",
+        "selector": ".inventory_list",
+        "description": "Inventory page loaded",
+        "oracle": { "url_contains": "/inventory.html" }
+      }
+    ]
+  },
+  {
+    "id": "tc_002",
+    "name": "SauceDemo login - broken username id (id_rename)",
+    "app": "saucedemo",
+    "url": "https://www.saucedemo.com",
+    "broken_type": "id_rename",
+    "steps": [
+      {
+        "action": "fill",
+        "selector": "#user-name-BROKEN",
+        "value": "standard_user",
+        "description": "Username field with broken id suffix"
+      },
+      {
+        "action": "fill",
+        "selector": "#password",
+        "value": "secret_sauce",
+        "description": "Password field"
+      },
+      {
+        "action": "click",
+        "selector": "#login-button",
+        "description": "Login button"
+      },
+      {
+        "action": "expect_visible",
+        "selector": ".inventory_list",
+        "description": "Inventory page loaded",
+        "oracle": { "url_contains": "/inventory.html" }
+      }
+    ]
+  },
+  {
+    "id": "tc_003",
+    "name": "SauceDemo login - broken password id (id_rename)",
+    "app": "saucedemo",
+    "url": "https://www.saucedemo.com",
+    "broken_type": "id_rename",
+    "steps": [
+      {
+        "action": "fill",
+        "selector": "#user-name",
+        "value": "standard_user",
+        "description": "Username field"
+      },
+      {
+        "action": "fill",
+        "selector": "#password-OLD",
+        "value": "secret_sauce",
+        "description": "Password field with broken id suffix"
+      },
+      {
+        "action": "click",
+        "selector": "#login-button",
+        "description": "Login button"
+      },
+      {
+        "action": "expect_visible",
+        "selector": ".inventory_list",
+        "description": "Inventory page loaded",
+        "oracle": { "url_contains": "/inventory.html" }
+      }
+    ]
+  },
+  {
+    "id": "tc_004",
+    "name": "SauceDemo login - broken button id (id_rename)",
+    "app": "saucedemo",
+    "url": "https://www.saucedemo.com",
+    "broken_type": "id_rename",
+    "steps": [
+      {
+        "action": "fill",
+        "selector": "#user-name",
+        "value": "standard_user",
+        "description": "Username field"
+      },
+      {
+        "action": "fill",
+        "selector": "#password",
+        "value": "secret_sauce",
+        "description": "Password field"
+      },
+      {
+        "action": "click",
+        "selector": "#login-button-BACKUP",
+        "description": "Login button with broken id suffix"
+      },
+      {
+        "action": "expect_visible",
+        "selector": ".inventory_list",
+        "description": "Inventory page loaded",
+        "oracle": { "url_contains": "/inventory.html" }
+      }
+    ]
+  },
+  {
+    "id": "tc_005",
+    "name": "SauceDemo login - wrong username id (wrong_id)",
+    "app": "saucedemo",
+    "url": "https://www.saucedemo.com",
+    "broken_type": "wrong_id",
+    "steps": [
+      {
+        "action": "fill",
+        "selector": "#userid",
+        "value": "standard_user",
+        "description": "Username field with wrong id"
+      },
+      {
+        "action": "fill",
+        "selector": "#password",
+        "value": "secret_sauce",
+        "description": "Password field"
+      },
+      {
+        "action": "click",
+        "selector": "#login-button",
+        "description": "Login button"
+      },
+      {
+        "action": "expect_visible",
+        "selector": ".inventory_list",
+        "description": "Inventory page loaded",
+        "oracle": { "url_contains": "/inventory.html" }
+      }
+    ]
+  },
+  {
+    "id": "tc_006",
+    "name": "SauceDemo login - wrong username CSS (wrong_css)",
+    "app": "saucedemo",
+    "url": "https://www.saucedemo.com",
+    "broken_type": "wrong_css",
+    "steps": [
+      {
+        "action": "fill",
+        "selector": ".username-input-field",
+        "value": "standard_user",
+        "description": "Username field with wrong CSS class"
+      },
+      {
+        "action": "fill",
+        "selector": "#password",
+        "value": "secret_sauce",
+        "description": "Password field"
+      },
+      {
+        "action": "click",
+        "selector": "#login-button",
+        "description": "Login button"
+      },
+      {
+        "action": "expect_visible",
+        "selector": ".inventory_list",
+        "description": "Inventory page loaded",
+        "oracle": { "url_contains": "/inventory.html" }
+      }
+    ]
+  },
+  {
+    "id": "tc_007",
+    "name": "SauceDemo login - wrong placeholder text (text_change)",
+    "app": "saucedemo",
+    "url": "https://www.saucedemo.com",
+    "broken_type": "text_change",
+    "steps": [
+      {
+        "action": "fill",
+        "selector": "[placeholder='Enter Username']",
+        "value": "standard_user",
+        "description": "Username field with wrong placeholder text"
+      },
+      {
+        "action": "fill",
+        "selector": "#password",
+        "value": "secret_sauce",
+        "description": "Password field"
+      },
+      {
+        "action": "click",
+        "selector": "#login-button",
+        "description": "Login button"
+      },
+      {
+        "action": "expect_visible",
+        "selector": ".inventory_list",
+        "description": "Inventory page loaded",
+        "oracle": { "url_contains": "/inventory.html" }
+      }
+    ]
+  },
+  {
+    "id": "tc_008",
+    "name": "SauceDemo login - non-existent data-testid (removed_attribute)",
+    "app": "saucedemo",
+    "url": "https://www.saucedemo.com",
+    "broken_type": "removed_attribute",
+    "steps": [
+      {
+        "action": "fill",
+        "selector": "[data-testid='username-field']",
+        "value": "standard_user",
+        "description": "Username field with removed data-testid"
+      },
+      {
+        "action": "fill",
+        "selector": "#password",
+        "value": "secret_sauce",
+        "description": "Password field"
+      },
+      {
+        "action": "click",
+        "selector": "#login-button",
+        "description": "Login button"
+      },
+      {
+        "action": "expect_visible",
+        "selector": ".inventory_list",
+        "description": "Inventory page loaded",
+        "oracle": { "url_contains": "/inventory.html" }
+      }
+    ]
+  },
+  {
+    "id": "tc_009",
+    "name": "SauceDemo - login form visibility (correct selector)",
+    "app": "saucedemo",
+    "url": "https://www.saucedemo.com",
+    "broken_type": "none",
+    "steps": [
+      {
+        "action": "expect_visible",
+        "selector": "#user-name",
+        "description": "Username input visible"
+      },
+      {
+        "action": "expect_visible",
+        "selector": "#password",
+        "description": "Password input visible"
+      },
+      {
+        "action": "expect_visible",
+        "selector": "#login-button",
+        "description": "Login button visible"
+      }
+    ]
+  },
+  {
+    "id": "tc_010",
+    "name": "SauceDemo - login button visibility (wrong_css)",
+    "app": "saucedemo",
+    "url": "https://www.saucedemo.com",
+    "broken_type": "wrong_css",
+    "steps": [
+      {
+        "action": "expect_visible",
+        "selector": "#submit-btn",
+        "description": "Login button with wrong id"
+      }
+    ]
+  },
+  {
+    "id": "tc_011",
+    "name": "SauceDemo login - all three elements broken (id_rename)",
+    "app": "saucedemo",
+    "url": "https://www.saucedemo.com",
+    "broken_type": "id_rename",
+    "steps": [
+      {
+        "action": "fill",
+        "selector": "#user-name-BROKEN",
+        "value": "standard_user",
+        "description": "Username field with broken id"
+      },
+      {
+        "action": "fill",
+        "selector": "#password-OLD",
+        "value": "secret_sauce",
+        "description": "Password field with broken id"
+      },
+      {
+        "action": "click",
+        "selector": "#login-button-BACKUP",
+        "description": "Login button with broken id"
+      },
+      {
+        "action": "expect_visible",
+        "selector": ".inventory_list",
+        "description": "Inventory page loaded after full healing",
+        "oracle": { "url_contains": "/inventory.html" }
+      }
+    ]
+  },
+  {
+    "id": "tc_012",
+    "name": "SauceDemo login - mixed correct and broken (id_rename)",
+    "app": "saucedemo",
+    "url": "https://www.saucedemo.com",
+    "broken_type": "id_rename",
+    "steps": [
+      {
+        "action": "fill",
+        "selector": "#user-name",
+        "value": "standard_user",
+        "description": "Username field (correct)"
+      },
+      {
+        "action": "fill",
+        "selector": "#password-BROKEN",
+        "value": "secret_sauce",
+        "description": "Password field with broken id"
+      },
+      {
+        "action": "click",
+        "selector": "#login-button",
+        "description": "Login button (correct)"
+      },
+      {
+        "action": "expect_visible",
+        "selector": ".inventory_list",
+        "description": "Inventory page loaded",
+        "oracle": { "url_contains": "/inventory.html" }
+      }
+    ]
+  }
+]
