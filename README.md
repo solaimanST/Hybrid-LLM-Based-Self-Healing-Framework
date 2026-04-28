@@ -1,97 +1,59 @@
 # Hybrid LLM-Based Self-Healing Framework for Web UI Testing
 
-A research-oriented hybrid framework for automatic repair of broken web UI test locators using a combination of heuristic DOM analysis, memory, and intent-aware validation.
+A research-oriented hybrid framework for automatic repair of broken web UI test locators using heuristic DOM analysis, memory, and intent-aware validation.
 
----
+## Key Features
 
-## 🚀 Key Features
-
-- Hybrid healing pipeline (Heuristic + LLM + Memory)
-- Intent-aware action validation (Add, Remove, Continue, Checkout, etc.)
-- Precision-first click repair (prevents wrong element interactions)
-- Post-action state verification (ensures correct UI behavior)
-- Supports:
-  - click
-  - fill
-  - select_option
-  - expect_visible
+- Hybrid healing pipeline: Heuristic + LLM + Memory
+- Intent-aware action validation for Add, Remove, Continue, Checkout, and sorting actions
+- Precision-first click repair to prevent wrong element interactions
+- Post-action state verification to confirm correct UI behavior
+- Supports `click`, `fill`, `select_option`, and `expect_visible`
 - Handles real-world UI break types:
   - ID changes
-  - class changes
-  - attribute removal
+  - Class changes
+  - Attribute removal
   - DOM restructuring
-  - nested layout changes
+  - Nested layout changes
 
----
-
-## 📊 Results
+## Results
 
 | Metric | Value |
-|------|------|
+|---|---:|
 | Total Tests | 45 |
 | Passed | 45 |
 | Success Rate | 100% |
-| False Repairs | 0 |
+| False Repair Failures | 0 |
 
-✔ Verified across:
-- Registration workflow (form + checkbox + submit)
-- E-commerce workflow (cart, checkout, sorting, navigation)
+Verified across:
 
----
+- Registration workflow: form filling, checkbox, submit
+- E-commerce workflow: add/remove cart, checkout, continue shopping, sorting
 
-## 🧠 Core Idea
+## Core Idea
 
-Traditional self-healing frameworks often select **wrong but similar elements**.
+Traditional self-healing test frameworks can select elements that look similar but perform the wrong action.
 
-This framework solves that by:
+This framework accepts a repaired action only when it satisfies:
 
-- enforcing **semantic intent matching**
-- requiring **unique element resolution**
-- validating **post-action state change**
+1. Unique element resolution
+2. Action compatibility
+3. Semantic intent matching
+4. Verified post-action state change
 
-A repair is accepted **only if the UI actually changes as expected**.
+## Architecture
 
----
-
-## 🏗️ Architecture
-Test → SelfHealer → Heuristic Engine → Candidate Filtering
-→ Intent Validation → Action Execution
-→ State Verification → Final Decision
-
----
-
-## 🛠️ Tech Stack
-
-- Python
-- Playwright
-- Pytest
-
----
-
-## ⚙️ Setup
-
-```bash
-pip install -r requirements.txt
-python -m playwright install
-
-## ⚙️ Run Test
-
-pytest tests/test_registration_healing.py tests/ecommerce_suite -s
-
-## ⚙️ Project Structure
-
-engine/        → core healing logic
-validator/     → action + result validation
-dom/           → DOM extraction & analysis
-llm/           → LLM-based repair
-tests/         → evaluation suites
-
-## ⚙️ Status
-
-Research-ready prototype.
-
-Designed for:
-
-academic research
-experimentation with UI test robustness
-extension into larger datasets
+```text
+Test
+  ↓
+SelfHealer
+  ↓
+Candidate Generation
+  ↓
+Intent-Aware Validation
+  ↓
+Action Execution
+  ↓
+Post-Action State Verification
+  ↓
+Final Decision
