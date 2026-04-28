@@ -1,6 +1,8 @@
 # 🚀 Hybrid LLM-Based Self-Healing Framework for Web UI Testing
+
 <p align="center">
 <b>Precision-First Hybrid Approach for Reliable UI Test Self-Healing</b><br />
+</p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Python-3.10+-blue.svg" />
@@ -24,13 +26,14 @@ git clone https://github.com/solaimanST/Hybrid-LLM-Based-Self-Healing-Framework
 cd Hybrid-LLM-Based-Self-Healing-Framework
 pip install -r requirements.txt
 python -m playwright install
-pytest tests/test_registration_healing.py tests/ecommerce_suite -s
-````
+pytest tests/test_registration_healing.py tests/ecommerce_suite tests/selene_converted -s
+```
 
 ---
 
 ## ✨ Overview
 
+This work focuses on eliminating false repairs in automated UI testing by ensuring that every healed action produces a verifiable and correct behavioral outcome.
 Modern UI tests frequently break due to minor DOM changes.
 Traditional self-healing systems often **repair incorrectly**, hiding real application bugs.
 
@@ -55,19 +58,31 @@ This framework introduces a new direction for **self-healing UI testing**:
 * Precision-first decision strategy
 * Elimination of false repairs
 
-> ❌ Traditional: “Find similar element”
+> ❌ Traditional: “Find similar element”  
 > ✅ This work: “Find correct element and verify correct behavior”
 
 ---
 
 ## 📊 Experimental Results
 
-| Dataset                 |   Tests | Result                |
-| ----------------------- | ------: | --------------------- |
-| Registration suite      |       5 | 5 passed              |
-| E-commerce suite        |      60 | 60 passed             |
-| Selene-converted suite  |      39 | 39 passed             |
+| Dataset | Tests | Result |
+|---|---:|---|
+| Registration suite | 5 | 5 passed |
+| E-commerce suite | 60 | 60 passed |
+| Selene-converted suite | 39 | 39 passed |
 | **Combined evaluation** | **104** | **104 passed (100%)** |
+
+---
+
+## 🧪 Evaluation Setup
+
+The evaluation dataset consists of:
+
+- 5 registration tests
+- 60 e-commerce workflow tests
+- 39 converted real-world tests
+
+All tests include both normal and broken locator scenarios to evaluate self-healing robustness under realistic UI changes.
 
 ---
 
