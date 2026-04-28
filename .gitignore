@@ -216,3 +216,25 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# =========================
+# Project-specific ignores
+# =========================
+
+# Logs (CRITICAL)
+logs/*.json
+logs/*.jsonl
+
+# Playwright artifacts
+playwright-report/
+test-results/
+trace.zip
+
+# Local memory / experiment outputs
+repair_memory.json
+experiment_log.json
+experiment_log.jsonl
+
+# OS
+.DS_Store
+Thumbs.db
